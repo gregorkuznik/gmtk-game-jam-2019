@@ -4,6 +4,13 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
+    private enum GameState {
+        Menu,
+        Playing,
+        Finished,
+        FinishedAll
+    }
+
     private const string _currentLevelKey = "currentLevel";
 
     [SerializeField]
@@ -21,6 +28,10 @@ public class GameController : MonoBehaviour {
     [SerializeField]
     private GameObject _finishPanel;
     [SerializeField]
+    private GameObject _finishText;
+    [SerializeField]
+    private GameObject _finishedAllText;
+    [SerializeField]
     private Button _playButton;
     [SerializeField]
     private Button _restartButton;
@@ -33,6 +44,7 @@ public class GameController : MonoBehaviour {
     private PlayerController _player;
     private int _currentLevelIndex;
     private GameObject _currentLevel;
+    private GameState _gameState = GameState.Menu;
 
     private void Awake() {
         ToggleUi();
@@ -46,16 +58,13 @@ public class GameController : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
+        if (_gameState == GameState.Playing && Input.GetKeyDown(KeyCode.R)) {
             StartLevel();
         }
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (_gameState != GameState.Menu && Input.GetKeyDown(KeyCode.Escape)) {
             ExitLevel();
         }
-        if (Input.GetKeyDown(KeyCode.N)) {
-            StartLevel();
-        }
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
+        if (_gameState != GameState.Playing && _gameState != GameState.FinishedAll && Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
             StartLevel();
         }
 #if UNITY_EDITOR
@@ -69,7 +78,7 @@ public class GameController : MonoBehaviour {
 
     private void InitLevel() {
         ToggleUi(true);
-        
+
         _player = Instantiate<PlayerController>(_playerPrefab, _startPosition, Quaternion.identity);
         _player.GameController = this;
         _camera.transform.position = _startPosition;
@@ -78,6 +87,7 @@ public class GameController : MonoBehaviour {
     }
 
     public void StartLevel() {
+        _gameState = GameState.Playing;
         CleanLevel();
         InitLevel();
     }
@@ -87,20 +97,28 @@ public class GameController : MonoBehaviour {
 
         var nextLevelIndex = _currentLevelIndex + 1;
         if (nextLevelIndex >= _levels.Count) {
-            _finishPanel.gameObject.SetActive(true);
+            _gameState = GameState.FinishedAll;
+            _finishedAllText.SetActive(true);
+            _finishText.SetActive(false);
             _nextButton.gameObject.SetActive(false);
+            _finishPanel.gameObject.SetActive(true);
             return;
         }
+
+         _gameState = GameState.Finished;
 
         _currentLevelIndex++;
         PlayerPrefs.SetInt(_currentLevelKey, _currentLevelIndex);
         PlayerPrefs.Save();
 
-        _finishPanel.gameObject.SetActive(true);
+        _finishedAllText.SetActive(false);
+        _finishText.SetActive(true);
         _nextButton.gameObject.SetActive(true);
+        _finishPanel.gameObject.SetActive(true);
     }
 
     private void ExitLevel() {
+        _gameState = GameState.Menu;
         CleanLevel();
         ToggleUi();
     }
