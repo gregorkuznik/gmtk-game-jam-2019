@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     private LayerMask _whatIsGround;
 
+    private float _startScaleX;
     private bool _grounded = false;
     private bool _secondJump = false;
     private ContactFilter2D _contactFilter;
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Start() {
+        _startScaleX = transform.localScale.x;
         _rigbody = GetComponent<Rigidbody2D>();
         _contactFilter.SetLayerMask(_whatIsGround);
     }
@@ -73,12 +75,23 @@ public class PlayerController : MonoBehaviour {
         // Move left / right
         float move = Input.GetAxis("Horizontal");
         _rigbody.velocity = new Vector2(_maxSpeed * move, _rigbody.velocity.y);
+
+        if (move > 0 && transform.localScale.x == -_startScaleX) {
+            Vector3 scale = transform.localScale;
+            scale.x = _startScaleX;
+            transform.localScale = scale;
+        } else if (move < 0 && transform.localScale.x == _startScaleX) {
+            Vector3 scale = transform.localScale;
+            scale.x = -_startScaleX;
+            transform.localScale = scale;
+        }
     }
 
     private void UpdateScale() {
         if (!_scale) return;
         if (_scaleTimer > _scaleTime) {
             _scale = false;
+            gameObject.SetActive(false);
             return;
         }
 
@@ -98,7 +111,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D col) {
         if (col.tag == DeadZoneTag) {
-            GameController.RestartLevel();
+            GameController.StartLevel();
         }
         if (col.tag == FinishTag) {
             ScaleOut();

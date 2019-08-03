@@ -37,20 +37,26 @@ public class GameController : MonoBehaviour {
     private void Awake() {
         ToggleUi();
 
-        _playButton.onClick.AddListener(PlayAction);
-        _restartButton.onClick.AddListener(RestartAction);
-        _backButton.onClick.AddListener(BackAction);
-        _nextButton.onClick.AddListener(NextAction);
+        _playButton.onClick.AddListener(StartLevel);
+        _restartButton.onClick.AddListener(StartLevel);
+        _backButton.onClick.AddListener(ExitLevel);
+        _nextButton.onClick.AddListener(StartLevel);
 
         _currentLevelIndex = PlayerPrefs.GetInt(_currentLevelKey, 0);
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
-            RestartLevel();
+            StartLevel();
         }
         if (Input.GetKeyDown(KeyCode.Escape)) {
             ExitLevel();
+        }
+        if (Input.GetKeyDown(KeyCode.N)) {
+            StartLevel();
+        }
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
+            StartLevel();
         }
 #if UNITY_EDITOR
         // Clear current level and prefs
@@ -61,7 +67,7 @@ public class GameController : MonoBehaviour {
 #endif
     }
 
-    private void StartLevel() {
+    private void InitLevel() {
         ToggleUi(true);
         
         _player = Instantiate<PlayerController>(_playerPrefab, _startPosition, Quaternion.identity);
@@ -71,9 +77,9 @@ public class GameController : MonoBehaviour {
         _currentLevel = Instantiate(_levels[_currentLevelIndex], _startPosition, Quaternion.identity);
     }
 
-    public void RestartLevel() {
+    public void StartLevel() {
         CleanLevel();
-        StartLevel();
+        InitLevel();
     }
 
     public void FinishLevel() {
@@ -94,19 +100,14 @@ public class GameController : MonoBehaviour {
         _nextButton.gameObject.SetActive(true);
     }
 
-    private void StartNextLevel() {
-        CleanLevel();
-        StartLevel();
-    }
-
     private void ExitLevel() {
         CleanLevel();
         ToggleUi();
     }
 
     private void CleanLevel() {
-        Destroy(_player.gameObject);
-        Destroy(_currentLevel);
+        if (_player) Destroy(_player.gameObject);
+        if (_currentLevel) Destroy(_currentLevel);
     }
 
     private void ToggleUi(bool game = false) {
@@ -117,23 +118,5 @@ public class GameController : MonoBehaviour {
             _finishPanel.gameObject.SetActive(false);
         }
     }
-
-    #region ButtonActions
-    private void PlayAction() {
-        StartLevel();
-    }
-
-    private void RestartAction() {
-        RestartLevel();
-    }
-
-    private void BackAction() {
-        ExitLevel();
-    }
-
-    private void NextAction() {
-        StartNextLevel();
-    }
-    #endregion
 
 }
