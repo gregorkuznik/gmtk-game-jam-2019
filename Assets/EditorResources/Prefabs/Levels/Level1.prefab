@@ -259,7 +259,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7194374014769505036}
-  m_Text: Pick up to open the portal
+  m_Text: Press the button to open the portal
   m_OffsetZ: 0
   m_CharacterSize: 0.08
   m_LineSpacing: 1
@@ -516,7 +516,7 @@ PrefabInstance:
     - target: {fileID: 6461254889230327836, guid: 5347fb046cc597d4196791d1c0cf6fba,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5347fb046cc597d4196791d1c0cf6fba, type: 3}

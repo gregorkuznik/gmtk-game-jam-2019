@@ -77,7 +77,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3676180797661175131}
-  m_Text: Use double jump by pressing jump twice
+  m_Text: Double jump by pressing jump twice
   m_OffsetZ: 0
   m_CharacterSize: 0.08
   m_LineSpacing: 1

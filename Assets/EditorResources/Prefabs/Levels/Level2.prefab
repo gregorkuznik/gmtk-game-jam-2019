@@ -77,7 +77,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2386536435609514474}
-  m_Text: Jump to reach distant blocks
+  m_Text: Jump to reach blocks that are further away
   m_OffsetZ: 0
   m_CharacterSize: 0.08
   m_LineSpacing: 1
