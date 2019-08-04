@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
     }
 
     private const string _currentLevelKey = "currentLevel";
+    private const string _currentLevelRetriesKey = "currentLevelRetries";
 
     [SerializeField]
     private List<GameObject> _levels;
@@ -39,10 +40,15 @@ public class GameController : MonoBehaviour {
     private Button _backButton;
     [SerializeField]
     private Button _nextButton;
+    [SerializeField]
+    private Text _retriesText;
+    [SerializeField]
+    private Text _levelText;
 
     private Vector3 _startPosition = Vector3.zero;
     private PlayerController _player;
     private int _currentLevelIndex;
+    private int _currentLevelRetries;
     private GameObject _currentLevel;
     private GameState _gameState = GameState.Menu;
 
@@ -51,17 +57,24 @@ public class GameController : MonoBehaviour {
         ToggleMenuUi(true);
 
         _playButton.onClick.AddListener(StartLevel);
-        _restartButton.onClick.AddListener(StartLevel);
+        _restartButton.onClick.AddListener(RestartLevel);
         _backButton.onClick.AddListener(ExitLevel);
         _nextButton.onClick.AddListener(StartLevel);
 
         _currentLevelIndex = PlayerPrefs.GetInt(_currentLevelKey, 0);
+        _currentLevelRetries = PlayerPrefs.GetInt(_currentLevelRetriesKey, 0);
+
+        SetProgressText();
     }
 
     private void Update() {
         bool canRestart = _gameState == GameState.Playing && Input.GetKeyDown(KeyCode.R);
+        if (canRestart) {
+            RestartLevel();
+        }
+
         bool canStart = _gameState != GameState.Playing && _gameState != GameState.FinishedAll && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter));
-        if (canRestart || canStart) {
+        if (canStart) {
             StartLevel();
         }
 
@@ -74,8 +87,10 @@ public class GameController : MonoBehaviour {
         // Editor clear level progress and restart level
         if (Input.GetKeyDown(KeyCode.X)) {
             _currentLevelIndex = 0;
+            _currentLevelRetries = 0;
             PlayerPrefs.DeleteAll();
             StartLevel();
+            SetProgressText();
         }
 #endif
     }
@@ -91,8 +106,17 @@ public class GameController : MonoBehaviour {
         _currentLevel = Instantiate(_levels[_currentLevelIndex], _startPosition, Quaternion.identity);
     }
 
-    public void StartLevel() {
+    public void RestartLevel() {
+        _currentLevelRetries++;
+        PlayerPrefs.SetInt(_currentLevelRetriesKey, _currentLevelRetries);
+        PlayerPrefs.Save();
+
+        StartLevel();
+    }
+
+    private void StartLevel() {
         _gameState = GameState.Playing;
+        SetProgressText();
         CleanLevel();
         InitLevel();
     }
@@ -111,6 +135,8 @@ public class GameController : MonoBehaviour {
 
         _currentLevelIndex++;
         PlayerPrefs.SetInt(_currentLevelKey, _currentLevelIndex);
+        _currentLevelRetries = 0;
+        PlayerPrefs.SetInt(_currentLevelRetriesKey, _currentLevelRetries);
         PlayerPrefs.Save();
 
         ToggleFinishUi();
@@ -144,6 +170,11 @@ public class GameController : MonoBehaviour {
         _gamePanel.SetActive(enable);
         _restartButton.gameObject.SetActive(enable);
         _finishPanel.gameObject.SetActive(false);
+    }
+
+    private void SetProgressText() {
+        _levelText.text = $"Level: {_currentLevelIndex + 1}";
+        _retriesText.text = $"Retries: {_currentLevelRetries}";
     }
 
 }

@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody2D _rigbody;
     private bool _lockInput;
 
-    private bool _scale;
+    private bool _scaleOut;
     private Vector3 _scaleStart;
     private Quaternion _rotationStart;
     private float _scaleTimer = 0.0f;
@@ -88,9 +88,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void UpdateScale() {
-        if (!_scale) return;
+        if (!_scaleOut) return;
         if (_scaleTimer > _scaleTime) {
-            _scale = false;
+            _scaleOut = false;
             gameObject.SetActive(false);
             return;
         }
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void ScaleOut() {
-        _scale = true;
+        _scaleOut = true;
         _scaleTimer = 0.0f;
         _scaleStart = transform.localScale;
         _rotationStart = transform.localRotation;
@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D col) {
         if (col.tag == DeadZoneTag) {
-            GameController.StartLevel();
+            GameController.RestartLevel();
         }
         if (col.tag == FinishTag) {
             ScaleOut();
