@@ -1,1 +1,1 @@
-# gmtk-2019
+# GMTK game jam 2019 entry
