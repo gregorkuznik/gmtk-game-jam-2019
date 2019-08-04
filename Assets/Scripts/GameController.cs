@@ -47,7 +47,8 @@ public class GameController : MonoBehaviour {
     private GameState _gameState = GameState.Menu;
 
     private void Awake() {
-        ToggleUi();
+        ToggleGameUi(false);
+        ToggleMenuUi(true);
 
         _playButton.onClick.AddListener(StartLevel);
         _restartButton.onClick.AddListener(StartLevel);
@@ -58,26 +59,30 @@ public class GameController : MonoBehaviour {
     }
 
     private void Update() {
-        if (_gameState == GameState.Playing && Input.GetKeyDown(KeyCode.R)) {
+        bool canRestart = _gameState == GameState.Playing && Input.GetKeyDown(KeyCode.R);
+        bool canStart = _gameState != GameState.Playing && _gameState != GameState.FinishedAll && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter));
+        if (canRestart || canStart) {
             StartLevel();
         }
-        if (_gameState != GameState.Menu && Input.GetKeyDown(KeyCode.Escape)) {
+
+        bool canExit = _gameState != GameState.Menu && Input.GetKeyDown(KeyCode.Escape);
+        if (canExit) {
             ExitLevel();
         }
-        if (_gameState != GameState.Playing && _gameState != GameState.FinishedAll && Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
-            StartLevel();
-        }
+
 #if UNITY_EDITOR
-        // Clear current level and prefs
-        if (Input.GetKeyDown(KeyCode.C)) {
+        // Editor clear level progress and restart level
+        if (Input.GetKeyDown(KeyCode.X)) {
             _currentLevelIndex = 0;
             PlayerPrefs.DeleteAll();
+            StartLevel();
         }
 #endif
     }
 
     private void InitLevel() {
-        ToggleUi(true);
+        ToggleMenuUi(false);
+        ToggleGameUi(true);
 
         _player = Instantiate<PlayerController>(_playerPrefab, _startPosition, Quaternion.identity);
         _player.GameController = this;
@@ -98,29 +103,24 @@ public class GameController : MonoBehaviour {
         var nextLevelIndex = _currentLevelIndex + 1;
         if (nextLevelIndex >= _levels.Count) {
             _gameState = GameState.FinishedAll;
-            _finishedAllText.SetActive(true);
-            _finishText.SetActive(false);
-            _nextButton.gameObject.SetActive(false);
-            _finishPanel.gameObject.SetActive(true);
+            ToggleFinishUi(true);
             return;
         }
 
-         _gameState = GameState.Finished;
+        _gameState = GameState.Finished;
 
         _currentLevelIndex++;
         PlayerPrefs.SetInt(_currentLevelKey, _currentLevelIndex);
         PlayerPrefs.Save();
 
-        _finishedAllText.SetActive(false);
-        _finishText.SetActive(true);
-        _nextButton.gameObject.SetActive(true);
-        _finishPanel.gameObject.SetActive(true);
+        ToggleFinishUi();
     }
 
     private void ExitLevel() {
         _gameState = GameState.Menu;
         CleanLevel();
-        ToggleUi();
+        ToggleGameUi(false);
+        ToggleMenuUi(true);
     }
 
     private void CleanLevel() {
@@ -128,13 +128,22 @@ public class GameController : MonoBehaviour {
         if (_currentLevel) Destroy(_currentLevel);
     }
 
-    private void ToggleUi(bool game = false) {
-        _menuPanel.SetActive(!game);
-        _gamePanel.SetActive(game);
-        if (game) {
-            _restartButton.gameObject.SetActive(true);
-            _finishPanel.gameObject.SetActive(false);
-        }
+    private void ToggleFinishUi(bool allFinished = false) {
+        _finishPanel.gameObject.SetActive(true);
+        _finishedAllText.SetActive(allFinished);
+        _finishText.SetActive(!allFinished);
+        _nextButton.gameObject.SetActive(!allFinished);
+        _restartButton.gameObject.SetActive(!allFinished);
+    }
+
+    private void ToggleMenuUi(bool enable) {
+        _menuPanel.SetActive(enable);
+    }
+
+    private void ToggleGameUi(bool enable) {
+        _gamePanel.SetActive(enable);
+        _restartButton.gameObject.SetActive(enable);
+        _finishPanel.gameObject.SetActive(false);
     }
 
 }
