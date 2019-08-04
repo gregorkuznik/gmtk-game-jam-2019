@@ -84,13 +84,17 @@ public class GameController : MonoBehaviour {
         }
 
 #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.N)) {
+            FinishLevel();
+            StartLevel();
+        }
+
         // Editor clear level progress and restart level
         if (Input.GetKeyDown(KeyCode.X)) {
             _currentLevelIndex = 0;
             _currentLevelRetries = 0;
             PlayerPrefs.DeleteAll();
             StartLevel();
-            SetProgressText();
         }
 #endif
     }
@@ -122,8 +126,6 @@ public class GameController : MonoBehaviour {
     }
 
     public void FinishLevel() {
-        _player.LockInput();
-
         var nextLevelIndex = _currentLevelIndex + 1;
         if (nextLevelIndex >= _levels.Count) {
             _gameState = GameState.FinishedAll;
@@ -156,10 +158,10 @@ public class GameController : MonoBehaviour {
 
     private void ToggleFinishUi(bool allFinished = false) {
         _finishPanel.gameObject.SetActive(true);
+        _restartButton.gameObject.SetActive(false);
         _finishedAllText.SetActive(allFinished);
         _finishText.SetActive(!allFinished);
         _nextButton.gameObject.SetActive(!allFinished);
-        _restartButton.gameObject.SetActive(!allFinished);
     }
 
     private void ToggleMenuUi(bool enable) {

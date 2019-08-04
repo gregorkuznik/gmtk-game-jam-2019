@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour {
 
     public GameController GameController { private get; set; }
 
-    public void LockInput() {
+    private void LockInput() {
         _lockInput = true;
         _rigbody.velocity = Vector3.zero;
         _rigbody.isKinematic = true;
@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour {
         if (_scaleTimer > _scaleTime) {
             _scaleOut = false;
             gameObject.SetActive(false);
+            GameController.FinishLevel();
             return;
         }
 
@@ -103,6 +104,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void ScaleOut() {
+        LockInput();
         _scaleOut = true;
         _scaleTimer = 0.0f;
         _scaleStart = transform.localScale;
@@ -110,12 +112,11 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D col) {
-        if (col.tag == DeadZoneTag) {
+        if (!_scaleOut && col.tag == DeadZoneTag) {
             GameController.RestartLevel();
         }
         if (col.tag == FinishTag) {
             ScaleOut();
-            GameController.FinishLevel();
         }
     }
 

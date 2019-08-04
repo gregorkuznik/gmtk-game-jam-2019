@@ -206,14 +206,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7735849, g: 0.28097185, b: 0.2938176, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4e511440775e7f246a70c7226b18ae6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42c4625993332fe44a2dba6c2e4df5c4, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -344,6 +344,10 @@ MonoBehaviour:
   - {fileID: 2956766246518304158, guid: 4fea943684fce5448bebfd2029abb216, type: 3}
   - {fileID: 2786027158924563115, guid: 5a70ce27d28306344868922768c231b7, type: 3}
   - {fileID: 4213125335508998966, guid: 2185cf1db0f853d4a96ddc3a7ca13e18, type: 3}
+  - {fileID: 4213125335508998966, guid: 1d0ce2c91a2174c488e340a067321079, type: 3}
+  - {fileID: 4213125335508998966, guid: 7bfef8f6e1197bf499ac9d5fa532abc8, type: 3}
+  - {fileID: 4213125335508998966, guid: 487294aa7d9f6e4448326d45ef8139a0, type: 3}
+  - {fileID: 4213125335508998966, guid: 6d1cbce9c47bc734a91e5146128d8670, type: 3}
   _camera: {fileID: 519420030}
   _playerPrefab: {fileID: 9075563142222550869, guid: 547ca31c46e603342b24817df7c0a66f,
     type: 3}
@@ -547,14 +551,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7735849, g: 0.28097185, b: 0.2938176, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4e511440775e7f246a70c7226b18ae6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42c4625993332fe44a2dba6c2e4df5c4, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1170,7 +1174,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1580067094
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1287,14 +1291,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7735849, g: 0.28097185, b: 0.2938176, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4e511440775e7f246a70c7226b18ae6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42c4625993332fe44a2dba6c2e4df5c4, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1381,8 +1385,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.2
-  m_Text: "Proceed through levels by picking up the key and then reaching the portal.\n\nBUT,
-    you can ONLY touch each block ONCE!\n\nMovement (keys):\nLeft\t(a / left arrow)\nRight\t(d
+  m_Text: "Proceed through levels by first opening and then reaching the exit portal.\n\nBUT,
+    you can ONLY touch each block ONCE!\n\nControls (keys):\nLeft\t(a / left arrow)\nRight\t(d
     / right arrow)\nJump\t(w / up arrow / space)"
 --- !u!222 &1675022424
 CanvasRenderer:
@@ -1585,15 +1589,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7735849, g: 0.28097185, b: 0.2938176, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4e511440775e7f246a70c7226b18ae6c, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 42c4625993332fe44a2dba6c2e4df5c4, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
