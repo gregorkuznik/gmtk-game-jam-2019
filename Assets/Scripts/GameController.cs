@@ -41,6 +41,8 @@ public class GameController : MonoBehaviour {
     [SerializeField]
     private Button _nextButton;
     [SerializeField]
+    private Button _resetGameProgress;
+    [SerializeField]
     private Text _retriesText;
     [SerializeField]
     private Text _levelText;
@@ -53,18 +55,19 @@ public class GameController : MonoBehaviour {
     private GameState _gameState = GameState.Menu;
 
     private void Awake() {
-        ToggleGameUi(false);
-        ToggleMenuUi(true);
-
         _playButton.onClick.AddListener(StartLevel);
         _restartButton.onClick.AddListener(RestartLevel);
         _backButton.onClick.AddListener(ExitLevel);
         _nextButton.onClick.AddListener(StartLevel);
+        _resetGameProgress.onClick.AddListener(ResetGameProgress);
 
         _currentLevelIndex = PlayerPrefs.GetInt(_currentLevelKey, 0);
         _currentLevelRetries = PlayerPrefs.GetInt(_currentLevelRetriesKey, 0);
 
         SetProgressText();
+
+        ToggleGameUi(false);
+        ToggleMenuUi(true);
     }
 
     private void Update() {
@@ -89,14 +92,20 @@ public class GameController : MonoBehaviour {
             StartLevel();
         }
 
-        // Editor clear level progress and restart level
         if (Input.GetKeyDown(KeyCode.X)) {
-            _currentLevelIndex = 0;
-            _currentLevelRetries = 0;
-            PlayerPrefs.DeleteAll();
+            ResetGameProgress();
             StartLevel();
         }
 #endif
+    }
+
+    private void ResetGameProgress() {
+        _currentLevelIndex = 0;
+        _currentLevelRetries = 0;
+        SetProgressText();
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+        SetResetGameButtonState();
     }
 
     private void InitLevel() {
@@ -166,12 +175,18 @@ public class GameController : MonoBehaviour {
 
     private void ToggleMenuUi(bool enable) {
         _menuPanel.SetActive(enable);
+        if (enable) SetResetGameButtonState();
     }
 
     private void ToggleGameUi(bool enable) {
         _gamePanel.SetActive(enable);
         _restartButton.gameObject.SetActive(enable);
         _finishPanel.gameObject.SetActive(false);
+    }
+
+    private void SetResetGameButtonState() {
+        var canResetGame = _currentLevelIndex > 0 || _currentLevelRetries > 0;
+        _resetGameProgress.gameObject.SetActive(canResetGame);
     }
 
     private void SetProgressText() {
